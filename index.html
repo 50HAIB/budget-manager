@@ -1,0 +1,1703 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinTrack - Personal Finance Dashboard</title>
+
+<style>
+
+/* =========================
+   GLOBAL STYLES
+========================= */
+
+:root {
+    --primary: #6545c5;
+    --primary-light: #eee9ff;
+    --bg: #f5f6fb;
+    --card: #ffffff;
+    --text: #25243a;
+    --muted: #77768b;
+    --border: #e9e8f0;
+    --green: #159b68;
+    --red: #e45464;
+    --blue: #3686d9;
+}
+
+body.dark {
+    --bg: #171625;
+    --card: #242235;
+    --text: #f3f1ff;
+    --muted: #aaa7c1;
+    --border: #39364e;
+    --primary-light: #332b4c;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    transition: 0.2s;
+}
+
+button, input, select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.app {
+    max-width: 1200px;
+    margin: auto;
+    padding: 22px;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.logo {
+    font-size: 27px;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.header-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn {
+    border: none;
+    padding: 11px 15px;
+    border-radius: 9px;
+    background: var(--primary);
+    color: white;
+    font-weight: bold;
+}
+
+.btn:hover {
+    opacity: 0.88;
+}
+
+.btn.secondary {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.btn.danger {
+    background: var(--red);
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.heading {
+    margin-bottom: 18px;
+}
+
+.heading p {
+    color: var(--muted);
+    margin-bottom: 0;
+}
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.top-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat {
+    padding: 20px;
+    border-radius: 14px;
+    color: white;
+    min-width: 0;
+}
+
+.stat p {
+    margin: 0 0 12px;
+    font-size: 14px;
+}
+
+.stat h2 {
+    margin: 0;
+    font-size: 25px;
+    overflow-wrap: anywhere;
+}
+
+.purple {
+    background: #6545c5;
+}
+
+.green {
+    background: #159b68;
+}
+
+.red {
+    background: #e45464;
+}
+
+.blue {
+    background: #3686d9;
+}
+
+/* =========================
+   INPUTS AND FORMS
+========================= */
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--card);
+    color: var(--text);
+    outline: none;
+    margin: 6px 0;
+}
+
+input:focus, select:focus {
+    border-color: var(--primary);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+/* =========================
+   INCOME AND EXPENSE TABS
+========================= */
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.tabs button {
+    flex: 1;
+    padding: 13px;
+    border: none;
+    border-radius: 9px;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.tabs button.active-income {
+    background: var(--green);
+    color: white;
+}
+
+.tabs button.active-expense {
+    background: var(--red);
+    color: white;
+}
+
+/* =========================
+   BUDGET PROGRESS
+========================= */
+
+.progress {
+    height: 12px;
+    background: var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 12px 0;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--green);
+    border-radius: 20px;
+    transition: width 0.3s;
+}
+
+.progress-bar.warning {
+    background: #edaa36;
+}
+
+.progress-bar.over {
+    background: var(--red);
+}
+
+/* =========================
+   ANALYTICS
+========================= */
+
+.analytics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.chart-row {
+    margin: 15px 0;
+}
+
+.chart-label {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 14px;
+    margin-bottom: 7px;
+}
+
+.bar {
+    height: 11px;
+    background: var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: 20px;
+}
+
+.income-fill {
+    background: var(--green);
+}
+
+.expense-fill {
+    background: var(--red);
+}
+
+.category-fill {
+    background: var(--primary);
+}
+
+/* =========================
+   FILTERS
+========================= */
+
+.filters {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+/* =========================
+   TRANSACTION HISTORY
+========================= */
+
+.transaction {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.transaction:last-child {
+    border-bottom: none;
+}
+
+.transaction small {
+    display: block;
+    color: var(--muted);
+    margin-top: 5px;
+}
+
+.amount {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.positive {
+    color: var(--green);
+}
+
+.negative {
+    color: var(--red);
+}
+
+.actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 7px;
+}
+
+.actions button {
+    border: none;
+    border-radius: 6px;
+    padding: 6px 9px;
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.actions .delete-btn {
+    color: var(--red);
+}
+
+.empty {
+    text-align: center;
+    padding: 25px;
+    color: var(--muted);
+}
+
+#notice {
+    color: var(--green);
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+footer {
+    text-align: center;
+    color: var(--muted);
+    padding: 20px;
+    font-size: 13px;
+}
+
+/* =========================
+   TABLET RESPONSIVENESS
+========================= */
+
+@media screen and (max-width: 850px) {
+
+    .app {
+        padding: 15px;
+    }
+
+    .top-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .analytics {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+/* =========================
+   MOBILE RESPONSIVENESS
+========================= */
+
+@media screen and (max-width: 600px) {
+
+    body {
+        font-size: 14px;
+    }
+
+    .app {
+        padding: 10px;
+        width: 100%;
+    }
+
+    /* Header */
+
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .logo {
+        font-size: 25px;
+    }
+
+    .header-actions {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        width: 100%;
+    }
+
+    .header-actions button {
+        width: 100%;
+        padding: 11px 6px;
+        font-size: 12px;
+    }
+
+    /* Headings */
+
+    .heading h1 {
+        font-size: 24px;
+    }
+
+    .heading p {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    /* Dashboard Cards */
+
+    .top-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .stat {
+        padding: 15px 12px;
+        border-radius: 12px;
+    }
+
+    .stat p {
+        font-size: 12px;
+    }
+
+    .stat h2 {
+        font-size: 18px;
+    }
+
+    /* Main Cards */
+
+    .card {
+        padding: 14px;
+        margin-bottom: 14px;
+        border-radius: 12px;
+    }
+
+    .card h3 {
+        font-size: 16px;
+    }
+
+    /* Monthly Overview */
+
+    .section-title {
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .section-title input {
+        max-width: 100% !important;
+    }
+
+    /* Forms */
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .full {
+        grid-column: auto;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 13px;
+        font-size: 16px;
+    }
+
+    .tabs {
+        gap: 7px;
+    }
+
+    .tabs button {
+        padding: 12px 5px;
+        font-size: 13px;
+    }
+
+    /* Analytics */
+
+    .analytics {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    /* Filters */
+
+    .filters {
+        grid-template-columns: 1fr;
+        gap: 7px;
+    }
+
+    /* Transactions */
+
+    .transaction {
+        align-items: flex-start;
+        gap: 8px;
+        padding: 14px 0;
+    }
+
+    .transaction > div:first-child {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .amount {
+        font-size: 13px;
+        text-align: right;
+    }
+
+    .actions button {
+        padding: 7px 10px;
+    }
+
+    /* Buttons */
+
+    .btn {
+        padding: 12px;
+        font-size: 13px;
+    }
+
+    footer {
+        font-size: 11px;
+    }
+
+}
+
+/* =========================
+   SMALL MOBILE PHONES
+========================= */
+
+@media screen and (max-width: 380px) {
+
+    .app {
+        padding: 7px;
+    }
+
+    .top-grid {
+        gap: 7px;
+    }
+
+    .stat {
+        padding: 12px 9px;
+    }
+
+    .stat h2 {
+        font-size: 16px;
+    }
+
+    .tabs button {
+        font-size: 11px;
+    }
+
+    .transaction {
+        flex-direction: column;
+    }
+
+    .amount {
+        text-align: left;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- HEADER -->
+
+<header>
+
+    <div>
+        <div class="logo">FinTrack.</div>
+        <small style="color:var(--muted)">
+            Personal Finance Dashboard
+        </small>
+    </div>
+
+    <div class="header-actions">
+
+        <button class="btn secondary" onclick="toggleDark()">
+            ☾ Dark Mode
+        </button>
+
+        <button class="btn secondary" onclick="exportCSV()">
+            Export CSV
+        </button>
+
+        <button class="btn secondary" onclick="downloadBackup()">
+            Backup
+        </button>
+
+        <button class="btn secondary"
+        onclick="document.getElementById('restoreFile').click()">
+            Restore
+        </button>
+
+        <input type="file" id="restoreFile"
+        accept=".json" hidden onchange="restoreBackup(event)">
+
+    </div>
+
+</header>
+
+<!-- PAGE HEADING -->
+
+<div class="heading">
+    <h1>Overview</h1>
+    <p>
+        Track your money, manage your budget and understand your spending.
+    </p>
+</div>
+
+<!-- MONTH SELECTOR -->
+
+<div class="card">
+
+    <div class="section-title">
+        <h3>Monthly Overview</h3>
+
+        <input type="month" id="monthSelect"
+        style="max-width:190px" onchange="render()">
+    </div>
+
+    <p style="color:var(--muted);font-size:13px">
+        Select a month to view its financial activity.
+    </p>
+
+</div>
+
+<!-- DASHBOARD -->
+
+<div class="top-grid">
+
+    <div class="stat purple">
+        <p>Monthly Budget</p>
+        <h2 id="budgetDisplay">Rs. 0</h2>
+    </div>
+
+    <div class="stat green">
+        <p>Total Income</p>
+        <h2 id="incomeDisplay">Rs. 0</h2>
+    </div>
+
+    <div class="stat red">
+        <p>Total Expenses</p>
+        <h2 id="expenseDisplay">Rs. 0</h2>
+    </div>
+
+    <div class="stat blue">
+        <p>Available Balance</p>
+        <h2 id="balanceDisplay">Rs. 0</h2>
+    </div>
+
+</div>
+
+<!-- BUDGET PLANNER -->
+
+<div class="card">
+
+    <div class="section-title">
+        <h3>Monthly Budget Planner</h3>
+
+        <span id="budgetStatus" style="color:var(--muted)">
+            Not set
+        </span>
+    </div>
+
+    <div class="form-grid">
+
+        <div>
+            <label>Set Your Spending Limit</label>
+
+            <input type="number" id="budgetInput"
+            placeholder="Enter monthly budget">
+        </div>
+
+        <div style="display:flex;align-items:end">
+
+            <button class="btn" style="width:100%"
+            onclick="saveBudget()">
+                Save Budget
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="progress">
+        <div class="progress-bar" id="budgetProgress"></div>
+    </div>
+
+    <p id="budgetText" style="color:var(--muted);font-size:14px">
+        Set a budget to track your spending.
+    </p>
+
+</div>
+
+<!-- ADD TRANSACTION -->
+
+<div class="card">
+
+    <h3 id="formTitle">Add a Transaction</h3>
+
+    <div class="tabs">
+
+        <button id="incomeTab" class="active-income"
+        onclick="setType('income')">
+            + Add Income
+        </button>
+
+        <button id="expenseTab"
+        onclick="setType('expense')">
+            − Add Expense
+        </button>
+
+    </div>
+
+    <div class="form-grid">
+
+        <div class="full">
+            <label>Description</label>
+
+            <input type="text" id="description"
+            placeholder="e.g. Salary, Shopping, Food">
+        </div>
+
+        <div>
+            <label>Amount (Rs.)</label>
+
+            <input type="number" id="amount"
+            placeholder="Enter amount">
+        </div>
+
+        <div>
+            <label>Category</label>
+
+            <select id="category">
+
+                <option value="">Select Category</option>
+                <option>Salary</option>
+                <option>Business</option>
+                <option>Pocket Money</option>
+                <option>Food</option>
+                <option>Shopping</option>
+                <option>Transport</option>
+                <option>Education</option>
+                <option>Bills</option>
+                <option>Entertainment</option>
+                <option>Health</option>
+                <option>Other</option>
+
+            </select>
+        </div>
+
+        <div>
+            <label>Date</label>
+            <input type="date" id="date">
+        </div>
+
+        <div style="display:flex;align-items:end">
+
+            <button class="btn" style="width:100%"
+            id="submitBtn" onclick="addTransaction()">
+                Add Transaction
+            </button>
+
+        </div>
+
+    </div>
+
+    <button class="btn secondary" id="cancelEdit"
+    style="display:none;margin-top:10px"
+    onclick="cancelEditing()">
+        Cancel Editing
+    </button>
+
+    <p id="notice"></p>
+
+</div>
+
+<!-- ANALYTICS -->
+
+<div class="analytics">
+
+    <div class="card">
+
+        <h3>Income vs Expenses</h3>
+
+        <div class="chart-row">
+
+            <div class="chart-label">
+                <span>Income</span>
+                <strong id="chartIncome">Rs. 0</strong>
+            </div>
+
+            <div class="bar">
+                <div class="bar-fill income-fill"
+                id="incomeBar"></div>
+            </div>
+
+        </div>
+
+        <div class="chart-row">
+
+            <div class="chart-label">
+                <span>Expenses</span>
+                <strong id="chartExpense">Rs. 0</strong>
+            </div>
+
+            <div class="bar">
+                <div class="bar-fill expense-fill"
+                id="expenseBar"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h3>Spending by Category</h3>
+
+        <div id="categoryChart">
+            <p class="empty">No expenses yet.</p>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- TRANSACTION HISTORY -->
+
+<div class="card">
+
+    <div class="section-title">
+
+        <h3>Transaction History</h3>
+
+        <span id="transactionCount"
+        style="color:var(--muted)">
+            0 records
+        </span>
+
+    </div>
+
+    <div class="filters">
+
+        <input type="search" id="search"
+        placeholder="Search transactions..."
+        oninput="showTransactions()">
+
+        <select id="filterType"
+        onchange="showTransactions()">
+
+            <option value="all">All Types</option>
+            <option value="income">Income Only</option>
+            <option value="expense">Expenses Only</option>
+
+        </select>
+
+        <select id="filterCategory"
+        onchange="showTransactions()">
+
+            <option value="all">All Categories</option>
+            <option>Salary</option>
+            <option>Business</option>
+            <option>Pocket Money</option>
+            <option>Food</option>
+            <option>Shopping</option>
+            <option>Transport</option>
+            <option>Education</option>
+            <option>Bills</option>
+            <option>Entertainment</option>
+            <option>Health</option>
+            <option>Other</option>
+
+        </select>
+
+    </div>
+
+    <div id="history"></div>
+
+</div>
+
+<footer>
+    FinTrack Personal Finance Dashboard | Your Money, Your Control
+</footer>
+
+</div>
+
+<script>
+
+/* =========================
+   DATA STORAGE
+========================= */
+
+let transactions = JSON.parse(
+    localStorage.getItem("fintrack_transactions") || "[]"
+);
+
+let budgets = JSON.parse(
+    localStorage.getItem("fintrack_budgets") || "{}"
+);
+
+let currentType = "income";
+let editingId = null;
+
+const $ = id => document.getElementById(id);
+
+function money(value) {
+    return "Rs. " + Number(value).toLocaleString("en-PK");
+}
+
+function selectedMonth() {
+    return $("monthSelect").value;
+}
+
+function monthTransactions() {
+    return transactions.filter(t =>
+        t.date.startsWith(selectedMonth())
+    );
+}
+
+function saveData() {
+
+    localStorage.setItem(
+        "fintrack_transactions",
+        JSON.stringify(transactions)
+    );
+
+    localStorage.setItem(
+        "fintrack_budgets",
+        JSON.stringify(budgets)
+    );
+
+}
+
+/* =========================
+   INITIAL SETUP
+========================= */
+
+$("monthSelect").value =
+    new Date().toISOString().slice(0, 7);
+
+$("date").value =
+    new Date().toISOString().slice(0, 10);
+
+/* =========================
+   TRANSACTION TYPE
+========================= */
+
+function setType(type) {
+
+    currentType = type;
+
+    $("incomeTab").className =
+        type === "income" ? "active-income" : "";
+
+    $("expenseTab").className =
+        type === "expense" ? "active-expense" : "";
+
+    $("formTitle").innerText =
+        type === "income"
+        ? "Add Income"
+        : "Add Expense";
+
+    $("submitBtn").innerText =
+        editingId !== null
+        ? "Update Transaction"
+        : "Add Transaction";
+
+}
+
+/* =========================
+   SAVE BUDGET
+========================= */
+
+function saveBudget() {
+
+    let amount = Number($("budgetInput").value);
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+        alert("Please enter a valid budget.");
+        return;
+    }
+
+    budgets[selectedMonth()] = amount;
+
+    saveData();
+
+    $("budgetInput").value = "";
+
+    render();
+
+}
+
+/* =========================
+   ADD OR UPDATE TRANSACTION
+========================= */
+
+function addTransaction() {
+
+    let description = $("description").value.trim();
+    let amount = Number($("amount").value);
+    let category = $("category").value;
+    let date = $("date").value;
+
+    if (
+        !description ||
+        !Number.isFinite(amount) ||
+        amount <= 0 ||
+        !category ||
+        !date
+    ) {
+        alert("Please complete all fields with valid information.");
+        return;
+    }
+
+    if (editingId !== null) {
+
+        let item = transactions.find(t => t.id === editingId);
+
+        if (item) {
+
+            item.description = description;
+            item.amount = amount;
+            item.category = category;
+            item.date = date;
+            item.type = currentType;
+
+        }
+
+        $("notice").innerText =
+            "Transaction updated successfully!";
+
+    } else {
+
+        transactions.push({
+
+            id: Date.now(),
+            description: description,
+            amount: amount,
+            category: category,
+            date: date,
+            type: currentType
+
+        });
+
+        $("notice").innerText =
+            "Transaction added successfully!";
+
+    }
+
+    saveData();
+
+    clearForm();
+
+    render();
+
+}
+
+/* =========================
+   CLEAR FORM
+========================= */
+
+function clearForm() {
+
+    $("description").value = "";
+    $("amount").value = "";
+    $("category").value = "";
+
+    $("date").value =
+        new Date().toISOString().slice(0, 10);
+
+    editingId = null;
+
+    $("cancelEdit").style.display = "none";
+
+    $("submitBtn").innerText = "Add Transaction";
+
+}
+
+/* =========================
+   EDIT TRANSACTION
+========================= */
+
+function editTransaction(id) {
+
+    let item = transactions.find(t => t.id === id);
+
+    if (!item) return;
+
+    editingId = id;
+
+    $("description").value = item.description;
+    $("amount").value = item.amount;
+    $("category").value = item.category;
+    $("date").value = item.date;
+
+    setType(item.type);
+
+    $("submitBtn").innerText = "Update Transaction";
+
+    $("cancelEdit").style.display = "block";
+
+    window.scrollTo({
+
+        top: $("formTitle").getBoundingClientRect().top +
+        window.scrollY - 20,
+
+        behavior: "smooth"
+
+    });
+
+}
+
+function cancelEditing() {
+
+    clearForm();
+
+    $("notice").innerText = "";
+
+}
+
+/* =========================
+   DELETE TRANSACTION
+========================= */
+
+function deleteTransaction(id) {
+
+    if (!confirm("Are you sure you want to delete this transaction?")) {
+        return;
+    }
+
+    transactions = transactions.filter(t => t.id !== id);
+
+    saveData();
+
+    if (editingId === id) {
+        clearForm();
+    }
+
+    render();
+
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+
+function render() {
+
+    let list = monthTransactions();
+
+    let income = list
+        .filter(t => t.type === "income")
+        .reduce((sum, t) => sum + t.amount, 0);
+
+    let expense = list
+        .filter(t => t.type === "expense")
+        .reduce((sum, t) => sum + t.amount, 0);
+
+    let budget = Number(budgets[selectedMonth()] || 0);
+
+    let balance = income - expense;
+
+    let remaining = budget - expense;
+
+    $("budgetDisplay").innerText = money(budget);
+    $("incomeDisplay").innerText = money(income);
+    $("expenseDisplay").innerText = money(expense);
+    $("balanceDisplay").innerText = money(balance);
+
+    $("budgetInput").placeholder =
+        budget
+        ? "Current budget: " + budget
+        : "Enter monthly budget";
+
+    $("budgetStatus").innerText =
+        budget ? "Budget set" : "Not set";
+
+    /* Budget Progress */
+
+    let percent = budget > 0
+        ? Math.min((expense / budget) * 100, 100)
+        : 0;
+
+    $("budgetProgress").style.width = percent + "%";
+
+    $("budgetProgress").className =
+        "progress-bar" +
+        (
+            percent >= 100
+            ? " over"
+            : percent >= 80
+            ? " warning"
+            : ""
+        );
+
+    if (budget === 0) {
+
+        $("budgetText").innerText =
+            "Set a monthly spending limit to monitor your expenses.";
+
+    } else if (remaining < 0) {
+
+        $("budgetText").innerText =
+            "You have exceeded your budget by " +
+            money(Math.abs(remaining));
+
+    } else {
+
+        $("budgetText").innerText =
+            money(expense) + " spent | " +
+            money(remaining) + " remaining (" +
+            Math.round(percent) + "% used)";
+
+    }
+
+    /* Income vs Expense Chart */
+
+    let max = Math.max(income, expense, 1);
+
+    $("chartIncome").innerText = money(income);
+    $("chartExpense").innerText = money(expense);
+
+    $("incomeBar").style.width =
+        (income / max * 100) + "%";
+
+    $("expenseBar").style.width =
+        (expense / max * 100) + "%";
+
+    /* Category Chart */
+
+    let categories = {};
+
+    list.filter(t => t.type === "expense")
+        .forEach(t => {
+
+            categories[t.category] =
+                (categories[t.category] || 0) + t.amount;
+
+        });
+
+    let entries = Object.entries(categories)
+        .sort((a, b) => b[1] - a[1]);
+
+    let categoryHTML = "";
+
+    if (entries.length === 0) {
+
+        categoryHTML =
+            '<p class="empty">No expenses yet.</p>';
+
+    } else {
+
+        entries.forEach(([name, value]) => {
+
+            let width = expense > 0
+                ? value / expense * 100
+                : 0;
+
+            categoryHTML += `
+                <div class="chart-row">
+
+                    <div class="chart-label">
+                        <span>${escapeHTML(name)}</span>
+                        <strong>${money(value)}</strong>
+                    </div>
+
+                    <div class="bar">
+                        <div class="bar-fill category-fill"
+                        style="width:${width}%"></div>
+                    </div>
+
+                </div>
+            `;
+
+        });
+
+    }
+
+    $("categoryChart").innerHTML = categoryHTML;
+
+    showTransactions();
+
+}
+
+/* =========================
+   SAFE HTML TEXT
+========================= */
+
+function escapeHTML(value) {
+
+    return String(value).replace(/[&<>"']/g, char => ({
+
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+
+    })[char]);
+
+}
+
+/* =========================
+   TRANSACTION HISTORY
+========================= */
+
+function showTransactions() {
+
+    let search = $("search").value.toLowerCase();
+
+    let type = $("filterType").value;
+
+    let category = $("filterCategory").value;
+
+    let filtered = monthTransactions().filter(t => {
+
+        let matchesSearch =
+            t.description.toLowerCase().includes(search) ||
+            t.category.toLowerCase().includes(search);
+
+        let matchesType =
+            type === "all" || t.type === type;
+
+        let matchesCategory =
+            category === "all" || t.category === category;
+
+        return matchesSearch &&
+            matchesType &&
+            matchesCategory;
+
+    });
+
+    filtered.sort((a, b) =>
+        b.date.localeCompare(a.date)
+    );
+
+    $("transactionCount").innerText =
+        filtered.length + " records";
+
+    if (filtered.length === 0) {
+
+        $("history").innerHTML =
+            '<div class="empty">No transactions found.</div>';
+
+        return;
+
+    }
+
+    $("history").innerHTML = filtered.map(t => {
+
+        let isIncome = t.type === "income";
+
+        return `
+
+            <div class="transaction">
+
+                <div>
+
+                    <strong>
+                        ${escapeHTML(t.description)}
+                    </strong>
+
+                    <small>
+                        ${escapeHTML(t.category)}
+                        · ${escapeHTML(t.date)}
+                        · ${isIncome ? "Income" : "Expense"}
+                    </small>
+
+                    <div class="actions">
+
+                        <button onclick="editTransaction(${t.id})">
+                            Edit
+                        </button>
+
+                        <button class="delete-btn"
+                        onclick="deleteTransaction(${t.id})">
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="amount ${isIncome ? "positive" : "negative"}">
+
+                    ${isIncome ? "+" : "-"}${money(t.amount)}
+
+                </div>
+
+            </div>
+
+        `;
+
+    }).join("");
+
+}
+
+/* =========================
+   DARK MODE
+========================= */
+
+function toggleDark() {
+
+    document.body.classList.toggle("dark");
+
+    localStorage.setItem(
+
+        "fintrack_dark",
+
+        document.body.classList.contains("dark")
+
+    );
+
+}
+
+if (localStorage.getItem("fintrack_dark") === "true") {
+
+    document.body.classList.add("dark");
+
+}
+
+/* =========================
+   CSV EXPORT
+========================= */
+
+function exportCSV() {
+
+    let list = monthTransactions();
+
+    if (list.length === 0) {
+
+        alert("No transactions available for this month.");
+
+        return;
+
+    }
+
+    let rows = [
+
+        ["Description", "Amount", "Type", "Category", "Date"],
+
+        ...list.map(t => [
+
+            t.description,
+            t.amount,
+            t.type,
+            t.category,
+            t.date
+
+        ])
+
+    ];
+
+    let csv = rows.map(row =>
+
+        row.map(value =>
+
+            '"' + String(value).replace(/"/g, '""') + '"'
+
+        ).join(",")
+
+    ).join("\n");
+
+    let blob = new Blob(
+
+        ["\uFEFF" + csv],
+
+        { type: "text/csv;charset=utf-8;" }
+
+    );
+
+    downloadFile(
+
+        blob,
+
+        "FinTrack-" + selectedMonth() + ".csv"
+
+    );
+
+}
+
+/* =========================
+   BACKUP
+========================= */
+
+function downloadBackup() {
+
+    let data = {
+
+        transactions: transactions,
+        budgets: budgets
+
+    };
+
+    let blob = new Blob(
+
+        [JSON.stringify(data, null, 2)],
+
+        { type: "application/json" }
+
+    );
+
+    downloadFile(blob, "FinTrack-Backup.json");
+
+}
+
+/* =========================
+   RESTORE BACKUP
+========================= */
+
+function restoreBackup(event) {
+
+    let file = event.target.files[0];
+
+    if (!file) return;
+
+    let reader = new FileReader();
+
+    reader.onload = function() {
+
+        try {
+
+            let data = JSON.parse(reader.result);
+
+            if (
+                !data ||
+                !Array.isArray(data.transactions) ||
+                !data.budgets ||
+                typeof data.budgets !== "object" ||
+                Array.isArray(data.budgets)
+            ) {
+
+                throw new Error("Invalid backup format");
+
+            }
+
+            let valid = data.transactions.every(t =>
+
+                t &&
+                typeof t.id === "number" &&
+                typeof t.description === "string" &&
+                Number.isFinite(t.amount) &&
+                t.amount > 0 &&
+                typeof t.category === "string" &&
+                typeof t.date === "string" &&
+                /^\d{4}-\d{2}-\d{2}$/.test(t.date) &&
+                (t.type === "income" || t.type === "expense")
+
+            );
+
+            if (!valid) {
+
+                throw new Error("Invalid transaction data");
+
+            }
+
+            if (!confirm(
+                "Restore this backup? Current data will be replaced."
+            )) {
+
+                return;
+
+            }
+
+            transactions = data.transactions;
+
+            budgets = data.budgets;
+
+            saveData();
+
+            render();
+
+            alert("Backup restored successfully!");
+
+        } catch (error) {
+
+            alert(
+                "Unable to restore. Please select a valid FinTrack backup."
+            );
+
+        }
+
+        event.target.value = "";
+
+    };
+
+    reader.readAsText(file);
+
+}
+
+/* =========================
+   DOWNLOAD FILE
+========================= */
+
+function downloadFile(blob, filename) {
+
+    let url = URL.createObjectURL(blob);
+
+    let link = document.createElement("a");
+
+    link.href = url;
+
+    link.download = filename;
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+}
+
+/* =========================
+   FIRST LOAD
+========================= */
+
+render();
+
+</script>
+
+</body>
+</html>
